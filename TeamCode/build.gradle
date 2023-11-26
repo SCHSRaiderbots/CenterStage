@@ -27,6 +27,9 @@ dependencies {
     implementation project(':FtcRobotController')
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
     testImplementation 'junit:junit:4.12'
+    // testImplementation 'org.junit.jupiter:junit-jupiter'
+    // testImplementation 'org.junit.jupiter:junit-jupiter-api:5.0.0-M2'
+    // testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
 }
 
 // test {
