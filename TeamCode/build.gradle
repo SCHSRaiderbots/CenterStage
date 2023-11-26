@@ -26,4 +26,10 @@ android {
 dependencies {
     implementation project(':FtcRobotController')
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
+    testImplementation 'junit:junit:4.12'
 }
+
+// test {
+//     useJUnitPlatform()
+//     systemProperty 'junit.jupiter.extensions.autodetection.enabled', 'true'
+// }
