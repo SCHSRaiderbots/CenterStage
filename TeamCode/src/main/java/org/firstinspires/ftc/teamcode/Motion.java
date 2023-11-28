@@ -85,10 +85,14 @@ public class Motion {
         ROBOT_2021,
         /** PowerPlay */
         ROBOT_2022,
+        /** CenterStage */
+        ROBOT_2023,
+        /** Mechanum */
         ROBOT_MECANUM
     }
-    /** The robot being used. Defaults to ROBOT_2021. */
-    public static Robot robot = Robot.ROBOT_2022;
+    /** The robot being used. */
+    // TODO: add automatic detection
+    public static Robot robot = Robot.ROBOT_2023;
 
     // robot parameters
 
@@ -274,7 +278,6 @@ public class Motion {
                 break;
 
             case ROBOT_2022:
-            default:
                 // get the motors
                 dcmotorLeft = hardwareMap.get(DcMotorEx.class, "leftMotor");
                 dcmotorRight = hardwareMap.get(DcMotorEx.class, "rightMotor");
@@ -298,6 +301,32 @@ public class Motion {
 
                 setMotorToleranceInches(0.3);
 
+                break;
+
+            case ROBOT_2023:
+            default:
+                // get the motors
+                dcmotorLeft = hardwareMap.get(DcMotorEx.class, "leftMotor");
+                dcmotorRight = hardwareMap.get(DcMotorEx.class, "rightMotor");
+
+                // set the motor directions
+                dcmotorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+                dcmotorRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
+                setRobotDims2023();
+
+
+                rpm = 6000.0;
+
+                revsPerSecond = rpm / 60.0;
+                ticksPerRev = 56.0;
+                f = 32000.0 / (ticksPerRev * revsPerSecond);
+                pidfRUE = new PIDFCoefficients(10, 1, 0, f, MotorControlAlgorithm.PIDF);
+                pidfR2P = new PIDFCoefficients(10, 0, 0, 0, MotorControlAlgorithm.PIDF);
+                setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfRUE);
+                setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, pidfR2P);
+
+                setMotorToleranceInches(0.3);
                 break;
         }
 
@@ -521,6 +550,26 @@ public class Motion {
 
         // set the wheel half separation
         distWheel = (7.6 * 1.027 * 0.0254) / 2.0;
+
+        // ticks per wheel revolution
+        // The motor has a 45-tooth gear, and the wheel has a 90-tooth sprocket.
+        ticksPerWheelRev = HD_HEX_TICKS_PER_REV * HD_HEX_GEAR_CART_5_1 * HD_HEX_GEAR_CART_4_1 * (90.0 / 45.0);
+
+        // derived values
+        distpertickLeft = mWheelDiameterLeft * Math.PI / (ticksPerWheelRev);
+        distpertickRight = mWheelDiameterRight * Math.PI / (ticksPerWheelRev);
+    }
+
+    /**
+     * Set Robot Dims for the Center Stage robot.
+     */
+    static void setRobotDims2023() {
+        // set the wheel diameters to 90 mm
+        mWheelDiameterLeft = 0.090;
+        mWheelDiameterRight = 0.090;
+
+        // set the wheel half separation
+        distWheel = (10.125 * 0.0254) / 2.0;
 
         // ticks per wheel revolution
         // The motor has a 45-tooth gear, and the wheel has a 90-tooth sprocket.
