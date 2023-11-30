@@ -34,6 +34,9 @@ public class TeleopDrive extends OpMode {
     // the Vision object
     Vision vision = null;
 
+    // the Drone Launcher
+    Drone drone = null;
+
     // Whether or not to use the IMU
     boolean bIMU = true;
 
@@ -65,9 +68,12 @@ public class TeleopDrive extends OpMode {
         Motion.init(hardwareMap);
 
         // create the vision object
-        if (robot == Motion.Robot.ROBOT_2022) {
+        if (robot == Motion.Robot.ROBOT_2022 || robot == Motion.Robot.ROBOT_2023) {
             vision = new Vision(hardwareMap);
         }
+
+        // drone launcher
+        drone = new Drone(hardwareMap);
 
         if (bIMU) {
             // Set up the parameters with which we will use our IMU. Note that integration
@@ -120,8 +126,8 @@ public class TeleopDrive extends OpMode {
 
         // Motion.setPoseInches(0,0,0);
 
-        // run using power
-        Motion.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        // run using encoder
+        Motion.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     @Override
@@ -149,12 +155,15 @@ public class TeleopDrive extends OpMode {
         double forward = -1.0 * boost(gamepad1.left_stick_y);
         double turn = 0.4 * (gamepad1.right_stick_x);
 
-        Motion.setPower(forward+turn, forward-turn);
+        double v = 4000.0;
+        Motion.setVelocity(v * (forward+turn), v * (forward-turn));
 
         if (gamepad1.y) {
             // set the pose
             Motion.setPoseInches(Vision.inchX, Vision.inchY, Vision.degTheta);
         }
+
+        drone.setArmed(gamepad1.a);
     }
 
     /**
