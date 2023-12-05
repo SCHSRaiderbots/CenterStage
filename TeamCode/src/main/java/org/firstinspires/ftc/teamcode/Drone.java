@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Drone {
     Servo servoDrone;
-    static final double posArmed = 0.1;
-    static final double posFired = 0.4;
+    static final double posArmed = 1.0;
+    static final double posFired = -1.0;
 
     public Drone(HardwareMap hardwareMap) {
         // get the servo

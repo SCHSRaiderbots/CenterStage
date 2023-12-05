@@ -63,6 +63,7 @@ public class TeleopDrive extends OpMode {
 
         // Motion.identifyRobot(hardwareMap);
         robot = Motion.Robot.ROBOT_2023;
+        Motion.identifyRobot(hardwareMap);
 
         // initialize motion
         Motion.init(hardwareMap);
@@ -155,7 +156,9 @@ public class TeleopDrive extends OpMode {
         double forward = -1.0 * boost(gamepad1.left_stick_y);
         double turn = 0.4 * (gamepad1.right_stick_x);
 
-        double v = 4000.0;
+        // max tick velocity should 6000 RPM * 28 ticks per rev = 2800
+        double rpm = 6000.0;
+        double v = (rpm / 60) * Motion.HD_HEX_TICKS_PER_REV;
         Motion.setVelocity(v * (forward+turn), v * (forward-turn));
 
         if (gamepad1.y) {
