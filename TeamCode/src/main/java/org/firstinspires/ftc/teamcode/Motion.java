@@ -74,25 +74,8 @@ public class Motion {
      *   center of rotation
      *   camera location (x, y, z, rx, ry, rz)
      */
-    public enum Robot {
-        /** Rover Ruckus */
-        ROBOT_2018,
-        /** Skystone */
-        ROBOT_2019,
-        /** Ultimate Goal */
-        ROBOT_2020,
-        /** Freight Frenzy Robot */
-        ROBOT_2021,
-        /** PowerPlay */
-        ROBOT_2022,
-        /** CenterStage */
-        ROBOT_2023,
-        /** Mechanum */
-        ROBOT_MECANUM
-    }
     /** The robot being used. */
-    // TODO: add automatic detection
-    public static Robot robot = Robot.ROBOT_2023;
+    public static RobotId robot = RobotId.ROBOT_2023;
 
     // robot parameters
 
@@ -155,43 +138,6 @@ public class Motion {
     // choose a drive mode
     enum DriveMode {TANK, ARCADE, ARCADE_ONE_STICK}
     static DriveMode driveMode = DriveMode.ARCADE;
-
-    /**
-     * Look at the hardwareMap to figure out which robot is being used.
-     * @param hardwareMap the robot configuration information
-     */
-    static void identifyRobot(HardwareMap hardwareMap) {
-        // Use a touch sensor (that need not exist) to identify the robot
-        RevTouchSensor touch;
-
-        // if it has a robot2018 touch sensor, then it is a 2018 robot...
-        touch = hardwareMap.tryGet(RevTouchSensor.class, "robot2018");
-        if (touch != null) {
-            // found the 2018 robot
-            robot = Robot.ROBOT_2018;
-            return;
-        }
-
-        touch = hardwareMap.tryGet(RevTouchSensor.class, "robot2020");
-        if (touch != null) {
-            // found the 2020 robot
-            robot = Robot.ROBOT_2020;
-        }
-
-        touch = hardwareMap.tryGet(RevTouchSensor.class, "robot2022");
-        if (touch != null) {
-            // found the 2022 robot
-            robot = Robot.ROBOT_2022;
-        }
-
-        touch = hardwareMap.tryGet(RevTouchSensor.class, "robot2023");
-        if (touch != null) {
-            // found the 2022 robot
-            robot = Robot.ROBOT_2023;
-        }
-
-        // we did not find any evidence to contrary, assume robot was set correctly...
-    }
 
     /**
      * Initialize the robot motion information.

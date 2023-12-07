@@ -62,19 +62,24 @@ public class TeleopDrive extends OpMode {
         LogDevice.dumpFirmware(hardwareMap);
 
         // Motion.identifyRobot(hardwareMap);
-        robot = Motion.Robot.ROBOT_2023;
-        Motion.identifyRobot(hardwareMap);
+        robot = RobotId.ROBOT_2023;
+        RobotId.identifyRobot(hardwareMap);
 
         // initialize motion
         Motion.init(hardwareMap);
 
         // create the vision object
-        if (robot == Motion.Robot.ROBOT_2022 || robot == Motion.Robot.ROBOT_2023) {
+        if (robot == RobotId.ROBOT_2022 || robot == RobotId.ROBOT_2023) {
             vision = new Vision(hardwareMap);
+
+            // we do not use object recognition
+            // .enableTfod(true);
         }
 
         // drone launcher
-        drone = new Drone(hardwareMap);
+        if (robot == RobotId.ROBOT_2023) {
+            drone = new Drone(hardwareMap);
+        }
 
         if (bIMU) {
             // Set up the parameters with which we will use our IMU. Note that integration
@@ -117,8 +122,6 @@ public class TeleopDrive extends OpMode {
 
         // update the robot pose
         Motion.updateRobotPose();
-
-        // report targets in view
     }
 
     @Override
@@ -129,6 +132,11 @@ public class TeleopDrive extends OpMode {
 
         // run using encoder
         Motion.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        if (vision != null) {
+            vision.enableTfod(false);
+            vision.enableAprilTags(true);
+        }
     }
 
     @Override
@@ -141,8 +149,6 @@ public class TeleopDrive extends OpMode {
 
         if (vision != null) {
             vision.telemetryAprilTag(telemetry);
-
-            vision.telemetryTfod(telemetry);
         }
 
         if (bIMU) {
@@ -166,7 +172,9 @@ public class TeleopDrive extends OpMode {
             Motion.setPoseInches(Vision.inchX, Vision.inchY, Vision.degTheta);
         }
 
-        drone.setArmed(gamepad1.a);
+        if (drone != null) {
+            drone.setArmed(gamepad1.a);
+        }
     }
 
     /**

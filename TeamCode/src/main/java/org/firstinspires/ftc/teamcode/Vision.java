@@ -155,6 +155,14 @@ public class Vision {
 
     }
 
+    void enableTfod(boolean enabled) {
+        visionPortal.setProcessorEnabled(tfod, enabled);
+    }
+
+    void enableAprilTags(boolean enabled) {
+        visionPortal.setProcessorEnabled(aprilTag, enabled);
+    }
+
     /**
      * Initialize the TensorFlow Object Detection engine.
      * Sets the confidence level and input size.
