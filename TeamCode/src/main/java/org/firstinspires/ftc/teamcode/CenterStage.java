@@ -33,7 +33,7 @@ public class CenterStage {
     /**
      * Called during the Autonomous init_loop.
      * Obtains configuration information from the gamepad
-     * @param gamepad1
+     * @param gamepad1 Driver's gamepad
      */
     public static void init_loop(Telemetry telemetry, Gamepad gamepad1) {
         // set the alliance

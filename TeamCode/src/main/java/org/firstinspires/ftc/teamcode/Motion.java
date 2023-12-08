@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import android.util.Log;
 
-import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -63,7 +62,7 @@ public class Motion {
     // The 5:1 cartridge is actually 68:13 (5.2...) = (55+13)/13
     public static final double HD_HEX_GEAR_CART_5_1 = 68.0/13.0;
 
-    /**
+    /*
      * Identity and Info about the actual robot
      * properties?
      *   wheel diameter
@@ -97,9 +96,9 @@ public class Motion {
 
     // the distance per tick for each wheel = circumference / ticks
     /** Distance traveled per encoder tick for the left wheel (meters/tick) */
-    static private double distpertickLeft = mWheelDiameterLeft * Math.PI / (ticksPerWheelRev);
+    static private double distancePerTickLeft = mWheelDiameterLeft * Math.PI / (ticksPerWheelRev);
     /** Distance traveled per encoder tick for the right wheel (meters/tick) */
-    static private double distpertickRight = mWheelDiameterRight * Math.PI / (ticksPerWheelRev);
+    static private double distancePerTickRight = mWheelDiameterRight * Math.PI / (ticksPerWheelRev);
 
     // the robot pose
     //   can have .updatePose(), .getPose(), .setPose()
@@ -426,8 +425,8 @@ public class Motion {
         ticksPerWheelRev = CORE_HEX_TICKS_PER_REV;
 
         // derived values
-        distpertickLeft = mWheelDiameterLeft * Math.PI / (ticksPerWheelRev);
-        distpertickRight = mWheelDiameterRight * Math.PI / (ticksPerWheelRev);
+        distancePerTickLeft = mWheelDiameterLeft * Math.PI / (ticksPerWheelRev);
+        distancePerTickRight = mWheelDiameterRight * Math.PI / (ticksPerWheelRev);
     }
 
     /**
@@ -446,8 +445,8 @@ public class Motion {
         ticksPerWheelRev = HD_HEX_TICKS_PER_REV * HD_HEX_GEAR_CART_5_1 * HD_HEX_GEAR_CART_4_1;
 
         // derived values
-        distpertickLeft = mWheelDiameterLeft * Math.PI / (ticksPerWheelRev);
-        distpertickRight = mWheelDiameterRight * Math.PI / (ticksPerWheelRev);
+        distancePerTickLeft = mWheelDiameterLeft * Math.PI / (ticksPerWheelRev);
+        distancePerTickRight = mWheelDiameterRight * Math.PI / (ticksPerWheelRev);
     }
 
     /**
@@ -466,8 +465,8 @@ public class Motion {
         ticksPerWheelRev = HD_HEX_TICKS_PER_REV * HD_HEX_GEAR_CART_5_1 * HD_HEX_GEAR_CART_4_1;
 
         // derived values
-        distpertickLeft = mWheelDiameterLeft * Math.PI / (ticksPerWheelRev);
-        distpertickRight = mWheelDiameterRight * Math.PI / (ticksPerWheelRev);
+        distancePerTickLeft = mWheelDiameterLeft * Math.PI / (ticksPerWheelRev);
+        distancePerTickRight = mWheelDiameterRight * Math.PI / (ticksPerWheelRev);
     }
 
     /**
@@ -493,8 +492,8 @@ public class Motion {
         ticksPerWheelRev = HD_HEX_TICKS_PER_REV * HD_HEX_GEAR_CART_5_1 * HD_HEX_GEAR_CART_4_1 * 15.0 / 20.0;
 
         // derived values
-        distpertickLeft = mWheelDiameterLeft * Math.PI / (ticksPerWheelRev);
-        distpertickRight = mWheelDiameterRight * Math.PI / (ticksPerWheelRev);
+        distancePerTickLeft = mWheelDiameterLeft * Math.PI / (ticksPerWheelRev);
+        distancePerTickRight = mWheelDiameterRight * Math.PI / (ticksPerWheelRev);
     }
 
     /**
@@ -513,8 +512,8 @@ public class Motion {
         ticksPerWheelRev = HD_HEX_TICKS_PER_REV * HD_HEX_GEAR_CART_5_1 * HD_HEX_GEAR_CART_4_1 * (90.0 / 45.0);
 
         // derived values
-        distpertickLeft = mWheelDiameterLeft * Math.PI / (ticksPerWheelRev);
-        distpertickRight = mWheelDiameterRight * Math.PI / (ticksPerWheelRev);
+        distancePerTickLeft = mWheelDiameterLeft * Math.PI / (ticksPerWheelRev);
+        distancePerTickRight = mWheelDiameterRight * Math.PI / (ticksPerWheelRev);
     }
 
     /**
@@ -533,8 +532,8 @@ public class Motion {
         ticksPerWheelRev = HD_HEX_TICKS_PER_REV * HD_HEX_GEAR_CART_5_1 * HD_HEX_GEAR_CART_4_1 * (90.0 / 45.0);
 
         // derived values
-        distpertickLeft = mWheelDiameterLeft * Math.PI / (ticksPerWheelRev);
-        distpertickRight = mWheelDiameterRight * Math.PI / (ticksPerWheelRev);
+        distancePerTickLeft = mWheelDiameterLeft * Math.PI / (ticksPerWheelRev);
+        distancePerTickRight = mWheelDiameterRight * Math.PI / (ticksPerWheelRev);
     }
 
     /**
@@ -585,8 +584,8 @@ public class Motion {
         cEncoderRight = ticksRight;
 
         // calculate the distance the wheels moved
-        double distL = deltaTicksLeft * distpertickLeft;
-        double distR = deltaTicksRight * distpertickRight;
+        double distL = deltaTicksLeft * distancePerTickLeft;
+        double distR = deltaTicksRight * distancePerTickRight;
 
         // approximate the arc length as the average of the left and right arcs
         double ds = (distR + distL) / 2;
@@ -633,7 +632,7 @@ public class Motion {
      * @return tolerance in meters
      */
     static double getMotorToleranceMeters() {
-        return dcmotorLeft.getTargetPositionTolerance() * distpertickLeft;
+        return dcmotorLeft.getTargetPositionTolerance() * distancePerTickLeft;
     }
 
     /**
@@ -649,8 +648,8 @@ public class Motion {
      * @param m tolerance in meters
      */
     static void setMotorToleranceMeters(double m) {
-        int ticksLeft = (int)(m / distpertickLeft);
-        int ticksRight = (int)(m / distpertickRight);
+        int ticksLeft = (int)(m / distancePerTickLeft);
+        int ticksRight = (int)(m / distancePerTickRight);
 
         dcmotorLeft.setTargetPositionTolerance(ticksLeft);
         dcmotorRight.setTargetPositionTolerance(ticksRight);
@@ -665,11 +664,11 @@ public class Motion {
         setMotorToleranceMeters(inch * 0.0254);
     }
 
+    static int fudgeCounter = 40;
     /**
      * Test if motors have reached their target.
      * @return true if both drive motors are close to target
      */
-    static int fudgeCounter = 40;
     static boolean finished() {
         // if either motor is busy, return false
         if (dcmotorLeft.isBusy() ||  dcmotorRight.isBusy()) {
@@ -704,8 +703,8 @@ public class Motion {
      */
     static void moveMotorsMeters(double mLeft, double mRight) {
         // convert distance to motor ticks
-        int ticksLeft = (int)(mLeft / distpertickLeft);
-        int ticksRight = (int)(mRight / distpertickRight);
+        int ticksLeft = (int)(mLeft / distancePerTickLeft);
+        int ticksRight = (int)(mRight / distancePerTickRight);
 
         dcmotorLeft.setTargetPosition(cEncoderLeft + ticksLeft);
         dcmotorRight.setTargetPosition(cEncoderRight + ticksRight);

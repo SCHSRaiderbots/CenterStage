@@ -15,7 +15,7 @@ public enum RobotId {
     ROBOT_2021("robot2021"),
     /** Ultimate Goal */
     ROBOT_2020("robot2020"),
-    /** Skystone */
+    /** SkyStone */
     ROBOT_2019("robot2019"),
     /** Rover Ruckus */
     ROBOT_2018("robot2018"),
