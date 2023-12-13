@@ -248,6 +248,7 @@ public class Motion {
                 rpm = 6000.0;
 
                 revsPerSecond = rpm / 60.0;
+                // TODO: is this wrong?
                 ticksPerRev = 56.0;
                 f = 32000.0 / (ticksPerRev * revsPerSecond);
                 pidfRUE = new PIDFCoefficients(10, 1, 0, f, MotorControlAlgorithm.PIDF);
