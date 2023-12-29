@@ -61,10 +61,8 @@ public class TeleopDrive extends OpMode {
             // .enableTfod(true);
         }
 
-        // drone launcher
-        if (robot == RobotId.ROBOT_2023) {
-            drone = new Drone(hardwareMap);
-        }
+        // get the drone launcher and set it to armed.
+        drone = new Drone(hardwareMap);
 
         if (bIMU) {
             // Set up the parameters with which we will use our IMU. Note that integration
@@ -148,9 +146,12 @@ public class TeleopDrive extends OpMode {
             Motion.setPoseInches(Vision.inchX, Vision.inchY, Vision.degTheta);
         }
 
-        if (drone != null) {
-            drone.setArmed(gamepad1.a);
-        }
+        // Button a launches the drone
+        drone.setLaunch(gamepad1.a);
+
+        // Hack to find good values for the Drone servo.
+        // drone.setAbsolutePosition(gamepad1.left_stick_x);
+        // telemetry.addData("Drone", gamepad1.left_stick_x);
     }
 
     /**
