@@ -26,6 +26,9 @@ public class TeleopDrive extends OpMode {
     // the Drone Launcher
     Drone drone = null;
 
+    // the Arm
+    Arm arm = null;
+
     // Whether or not to use the IMU
     boolean bIMU = true;
 
@@ -63,6 +66,9 @@ public class TeleopDrive extends OpMode {
 
         // get the drone launcher and set it to armed.
         drone = new Drone(hardwareMap);
+
+        // get the arm
+        arm = new Arm(hardwareMap);
 
         if (bIMU) {
             // Set up the parameters with which we will use our IMU. Note that integration
@@ -149,9 +155,15 @@ public class TeleopDrive extends OpMode {
         // Button a launches the drone
         drone.setLaunch(gamepad1.a);
 
+        // set the arm position
+        double pow = (gamepad1.left_trigger - gamepad1.right_trigger);
+        arm.setPower(pow);
+
         // Hack to find good values for the Drone servo.
         // drone.setAbsolutePosition(gamepad1.left_stick_x);
         // telemetry.addData("Drone", gamepad1.left_stick_x);
+
+        telemetry.addData("Arm", ((arm.isReal()) ? "Real " : "Fake ") + pow);
     }
 
     /**
