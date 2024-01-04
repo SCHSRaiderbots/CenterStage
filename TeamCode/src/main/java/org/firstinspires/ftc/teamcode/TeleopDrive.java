@@ -155,13 +155,13 @@ public class TeleopDrive extends OpMode {
         // Button a launches the drone
         drone.setLaunch(gamepad1.a);
 
-        // set the arm position
-        double pow = (gamepad1.left_trigger - gamepad1.right_trigger);
-        arm.setPower(pow);
-
         // Hack to find good values for the Drone servo.
         // drone.setAbsolutePosition(gamepad1.left_stick_x);
         // telemetry.addData("Drone", gamepad1.left_stick_x);
+
+        // set the arm position
+        double pow = (gamepad1.left_trigger - gamepad1.right_trigger);
+        arm.setArmAngle(90 * pow);
 
         telemetry.addData("Arm", ((arm.isReal()) ? "Real " : "Fake ") + pow);
     }
