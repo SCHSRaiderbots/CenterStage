@@ -6,6 +6,8 @@ public class ParallelCommandGroup extends CommandBase {
 
     public ParallelCommandGroup(CommandBase ... commands) {
         aCommands = commands;
+        bCommandDone = new boolean[aCommands.length];
+
         for (int i = 0; i < aCommands.length; i++) {
             // assume the command is finished
             bCommandDone[i] = true;
@@ -35,7 +37,7 @@ public class ParallelCommandGroup extends CommandBase {
     @Override
     public boolean isFinished() {
         // assume all commands have finished
-        boolean alive = false;
+        boolean done = true;
 
         for (int i = 0; i < aCommands.length; i++) {
             if (bCommandDone[i]) {
@@ -46,12 +48,12 @@ public class ParallelCommandGroup extends CommandBase {
                 bCommandDone[i] = true;
             } else {
                 // this command is still running...
-                alive = true;
+                done = false;
             }
         }
 
         // return whether we are still alive
-        return alive;
+        return done;
     }
 
     @Override
