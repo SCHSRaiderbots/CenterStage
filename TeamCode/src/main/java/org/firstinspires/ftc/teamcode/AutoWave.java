@@ -22,15 +22,14 @@ public class AutoWave extends OpMode {
         arm = new Arm(hardwareMap);
 
         command = new SequentialCommandGroup(
+                // put the arm down and drive forward
                 new ParallelCommandGroup(
-                        new MoveArm(30, arm),
-                        new DriveTo(12.0, 0.0)
+                        new MoveArm(-10, arm),
+                        new DriveForward(6.0 + 48.0)
                 ),
-                new MoveArm(-30, arm),
-                new ParallelCommandGroup(
-                        new DriveTo(-12, 0.0),
-                        new MoveArm(0, arm)
-                )
+                new DriveTurnToward(72.0, 0.0),
+                new DriveForward(54.0),
+                new MoveArm(0, arm)
         );
 
         CenterStage.init();

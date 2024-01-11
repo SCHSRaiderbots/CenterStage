@@ -2,25 +2,25 @@ package org.firstinspires.ftc.teamcode;
 
 import org.firstinspires.ftc.teamcode.command.CommandBase;
 
-public class DriveTo extends CommandBase {
-    private final double m_x;
-    private final double m_y;
+public class DriveTurnDirection extends CommandBase {
+    double m_x;
+    double m_y;
 
-    public DriveTo(double x, double y) {
-        // remember the arguments
+    public DriveTurnDirection(double x, double y) {
+        // remember the direction
         m_x = x;
         m_y = y;
     }
 
     @Override
     public void initialize() {
-        // move to position
-        Motion.moveInches(m_x);
+        // TODO: This is wrong...
+        Motion.headingInches(m_x, m_y);
     }
 
     @Override
     public void execute() {
-        // motor controller will do the work
+        // nothing to do
     }
 
     @Override
@@ -30,6 +30,6 @@ public class DriveTo extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-
+        // nothing to do
     }
 }

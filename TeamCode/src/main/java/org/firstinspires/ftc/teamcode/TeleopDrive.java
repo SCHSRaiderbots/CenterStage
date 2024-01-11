@@ -26,6 +26,12 @@ public class TeleopDrive extends OpMode {
     // the Drone Launcher
     Drone drone = null;
 
+    // the Wrist
+    Wrist wrist = null;
+
+    // the Gripper
+    Gripper gripper = null;
+
     // the Arm
     Arm arm = null;
 
@@ -70,6 +76,12 @@ public class TeleopDrive extends OpMode {
         // get the arm
         arm = new Arm(hardwareMap);
 
+        // get the wrist
+        wrist = new Wrist(hardwareMap);
+
+        // get the gripper
+        gripper = new Gripper(hardwareMap);
+
         if (bIMU) {
             // Set up the parameters with which we will use our IMU. Note that integration
             // algorithm here just reports accelerations to the logcat log; it doesn't actually
@@ -102,6 +114,10 @@ public class TeleopDrive extends OpMode {
 
         // update the robot pose
         Motion.updateRobotPose();
+
+        // test if servos active during init. Yes, they are active!
+        if (gamepad2.left_bumper) gripper.grip();
+        if (gamepad2.right_bumper) gripper.release();
     }
 
     @Override
@@ -161,9 +177,19 @@ public class TeleopDrive extends OpMode {
 
         // set the arm position
         double pow = (gamepad1.left_trigger - gamepad1.right_trigger);
-        arm.setArmAngle(90 * pow);
+        arm.setArmAngle(180 * pow);
 
-        telemetry.addData("Arm", ((arm.isReal()) ? "Real " : "Fake ") + pow);
+        // set the wrist position
+        wrist.setPosition(gamepad2.right_stick_y);
+
+        // hack to find gripper position
+        // pow = gamepad2.left_trigger;
+        // gripper.setPosition(pow);
+
+        if (gamepad2.left_bumper) gripper.grip();
+        if (gamepad2.right_bumper) gripper.release();
+
+        telemetry.addData("Wrist", ((wrist.isReal()) ? "Real " : "Fake ") + pow);
     }
 
     /**

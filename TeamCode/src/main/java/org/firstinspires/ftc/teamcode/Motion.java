@@ -302,6 +302,7 @@ public class Motion {
 
         // set the power level
         setPower(0.3);
+        setPower(1.0);
 
         // dump the motors
         LogDevice.dump("dcmotorLeft", dcmotorLeft);

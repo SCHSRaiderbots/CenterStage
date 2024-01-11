@@ -24,12 +24,12 @@ public class CenterStage {
     /** We can be on the BLUE or the RED alliance */
     enum Alliance {BLUE, RED}
     /** Our current alliance */
-    public static Alliance alliance = Alliance.RED;
+    public static Alliance alliance = Alliance.BLUE;
 
     /** We can start in the left or the right position */
     enum StartPos {AUDIENCE, BACKSTAGE}
     /** Starting Position of the Robot */
-    public static StartPos startPos = StartPos.BACKSTAGE;
+    public static StartPos startPos = StartPos.AUDIENCE;
 
     public static final float inchTile = 22.75f;
 
