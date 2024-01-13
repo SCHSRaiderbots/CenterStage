@@ -36,6 +36,7 @@ public class AutoSit extends OpMode {
         CenterStage.init_loop(telemetry, gamepad1);
 
         // look for the pixel
+        telemetry.addData("Hit", vision.objectNumber());
         vision.telemetryTfod(telemetry);
     }
 

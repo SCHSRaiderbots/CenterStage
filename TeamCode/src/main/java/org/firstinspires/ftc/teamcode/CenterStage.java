@@ -24,14 +24,15 @@ public class CenterStage {
     /** We can be on the BLUE or the RED alliance */
     enum Alliance {BLUE, RED}
     /** Our current alliance */
-    public static Alliance alliance = Alliance.BLUE;
+    public static Alliance alliance = Alliance.RED;
 
     /** We can start in the left or the right position */
     enum StartPos {AUDIENCE, BACKSTAGE}
     /** Starting Position of the Robot */
-    public static StartPos startPos = StartPos.AUDIENCE;
+    public static StartPos startPos = StartPos.BACKSTAGE;
 
-    public static final float inchTile = 22.75f;
+    // use the authoritative distance in Motion.
+    public static final float inchTile = (float)Motion.inchesPerTile;
 
     // figure out positions of the April Tags
 
@@ -110,10 +111,35 @@ public class CenterStage {
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, rx, ry, rz));
     }
 
+
+    // several routines that will convert tiles to inches
+    public static double tileX(double tiles) { return tiles * Motion.inchesPerTile; }
+    public static double tileX(double tiles, double inches) { return tiles * Motion.inchesPerTile + inches; }
+    public static double tileY(double tiles) { return tiles * Motion.inchesPerTile; }
+    public static double tileY(double tiles, double inches) { return tiles * Motion.inchesPerTile + inches; }
+
+    public static double tileXR(double tiles) { return tileX(tiles); }
+    public static double tileXR(double tiles, double inches) { return tileX(tiles, inches); }
+    public static double tileYR(double tiles) {
+        switch (alliance) {
+            case BLUE:
+                return -tileY(tiles);
+            case RED:
+            default:
+                return tileY(tiles);
+        }
+    }
+    public static double tileYR(double tiles, double inches) {
+        switch (alliance) {
+            case BLUE:
+                return -tileY(tiles, inches);
+            case RED:
+            default:
+                return tileY(tiles, inches);
+        }
+    }
+
     public static void init() {
-
-
-
         // set the robot's initial pose
         setPose();
     }
@@ -161,17 +187,17 @@ public class CenterStage {
      */
     public static void setPose() {
         // TODO: should be a property of the robot
-        double robotBackDistance = 7.75;
+        double robotBackDistance = 9.25;
 
         // set the starting tile to 2 or 4
         // TODO: really 1.5 tiles
-        double dx = 36.0;
-        double x = (startPos == StartPos.AUDIENCE)? -dx : +dx;
+        double dx = tileXR(1.5);
+        double x = (startPos == StartPos.AUDIENCE)? tileX(-1.5) : tileX(0.5);
 
         /// set the starting tile to A or F; direction to plus or minus 90 degrees
         // TODO: assumes alliance wall is 70.75 (x2 = 141.5)
-        double fy = 70.75 - robotBackDistance;
-        double y = (alliance == Alliance.RED)? -fy : +fy;
+        // the wall is at 3 tiles less 3/8 inch (1/2 the interface gap)
+        double y = tileYR(-3.0, robotBackDistance + 0.375);
         double ang = (alliance == Alliance.RED)? +90.0 : -90.0;
 
         Motion.setPoseInches(x, y, ang);

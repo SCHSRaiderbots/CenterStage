@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.teamcode.Motion.robot;
 
+import androidx.core.math.MathUtils;
+
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -36,7 +38,11 @@ public class TeleopDrive extends OpMode {
     Arm arm = null;
 
     // Whether or not to use the IMU
-    boolean bIMU = true;
+    boolean bIMU = false;
+
+    double armPosition = 0.0;
+    // todo this is wrong
+    double positionWrist = 0.5;
 
     // The IMU sensor object
     // BNO055IMU imu = null;
@@ -115,9 +121,11 @@ public class TeleopDrive extends OpMode {
         // update the robot pose
         Motion.updateRobotPose();
 
-        // test if servos active during init. Yes, they are active!
-        if (gamepad2.left_bumper) gripper.grip();
-        if (gamepad2.right_bumper) gripper.release();
+        // process wrist buttons
+        buttonsWrist();
+
+        // process gripper buttons
+        buttonsGripper();
     }
 
     @Override
@@ -177,19 +185,48 @@ public class TeleopDrive extends OpMode {
 
         // set the arm position
         double pow = (gamepad1.left_trigger - gamepad1.right_trigger);
-        arm.setArmAngle(180 * pow);
+        armPosition += 2.0 * pow;
+        // arm.setArmAngle(240 * pow);
 
-        // set the wrist position
-        wrist.setPosition(gamepad2.right_stick_y);
+        if (gamepad1.x) {
+            armPosition = -125.0;
+        }
+
+        if (gamepad1.y) {
+            armPosition = 0.0;
+        }
+
+        // clamp the arm position to reasonable values
+        armPosition = MathUtils.clamp(armPosition, -220.0, 20.0);
+        arm.setArmAngle(armPosition);
+
+        if (armPosition < -180.0) {
+            wrist.setPosition(.58);
+        } else if (armPosition < -90.0) {
+            wrist.setPosition(.50);
+        } else {
+            buttonsWrist();
+        }
+
+        // possibly update the arm offset
+        arm.checkHall();
+
+        // process wrist buttons
+        // buttonsWrist();
 
         // hack to find gripper position
         // pow = gamepad2.left_trigger;
         // gripper.setPosition(pow);
 
-        if (gamepad2.left_bumper) gripper.grip();
-        if (gamepad2.right_bumper) gripper.release();
+        // process gripper buttons
+        if (armPosition > -90.0) {
+            gripper.grip();
+        } else {
+            buttonsGripper();
+        }
 
-        telemetry.addData("Wrist", ((wrist.isReal()) ? "Real " : "Fake ") + pow);
+        telemetry.addData("Arm angle", arm.getAngle());
+        telemetry.addData("wrist angle", wrist.getPosition());
     }
 
     /**
@@ -204,6 +241,33 @@ public class TeleopDrive extends OpMode {
     @Override
     public void stop() {
         // turn off tracking
+    }
+
+    /**
+     * Method to provide consistent wrist controls.
+     */
+    public void buttonsWrist() {
+        if (gamepad2.a) {
+            positionWrist += 0.02 * gamepad2.left_stick_y;
+            wrist.setPosition(positionWrist);
+        } else {
+            // wrist.setPosition(gamepad2.right_stick_y);
+            if (gamepad2.dpad_up) {positionWrist = 1.0; wrist.setPosition(positionWrist);}
+            if (gamepad2.dpad_right) {positionWrist = 0.75; wrist.setPosition(positionWrist);}
+            if (gamepad2.dpad_left) {positionWrist = 0.5; wrist.setPosition(positionWrist);}
+            if (gamepad2.dpad_down) {positionWrist = 0.25; wrist.setPosition(positionWrist);}
+        }
+    }
+
+    /**
+     * Method to provide consistent gripper controls.
+     */
+    public void buttonsGripper() {
+        if (gamepad1.left_bumper) gripper.grip();
+        if (gamepad1.right_bumper) gripper.release();
+
+        if (gamepad2.left_bumper) gripper.grip();
+        if (gamepad2.right_bumper) gripper.release();
     }
 
 

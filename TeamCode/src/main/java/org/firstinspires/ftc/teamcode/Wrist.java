@@ -16,6 +16,14 @@ public class Wrist {
         }
     }
 
+    public double getPosition() {
+        if (servoWrist != null) {
+            return servoWrist.getPosition();
+        } else {
+            return -1.0;
+        }
+    }
+
     public boolean isReal() {
         return servoWrist != null;
     }

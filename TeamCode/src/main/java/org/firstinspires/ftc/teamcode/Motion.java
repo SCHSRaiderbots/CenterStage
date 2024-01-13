@@ -120,8 +120,8 @@ public class Motion {
     static double thetaPoseDegrees = 0.0;
 
     /** Width of a floor tile */
-    static final double metersPerTile = 23.625 * 0.0254;
-
+    static final double inchesPerTile = 23.625;
+    static final double metersPerTile = inchesPerTile * 0.0254;
 
     // motors used to drive the differential robot
     static private DcMotorEx dcmotorLeft;

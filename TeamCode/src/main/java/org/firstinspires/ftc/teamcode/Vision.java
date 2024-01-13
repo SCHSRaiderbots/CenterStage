@@ -45,7 +45,6 @@ public class Vision {
      */
     private VisionPortal visionPortal;
 
-
     // Since ImageTarget trackables use mm to specify their dimensions, we must use mm for all the physical dimension.
     // define some constants and conversions here
     static final float mmPerInch        = 25.4f;
@@ -289,5 +288,62 @@ public class Vision {
         }   // end for() loop
 
     }   // end method telemetryTfod()
+
+    /**
+     * Figure out where the pixel is placed.
+     * The camera is offset and will only see positions 2 and 3.
+     * Therefore, we assume position 1.
+     * We assume the image is 640 x 480.
+     * We assume position 2 is at about the midline (y = 240)
+     * Maybe we should call this exactly once during competition....
+     * @return out position estimate
+     */
+    public int objectNumber() {
+        List<Recognition> currentRecognitions = tfod.getRecognitions();
+        // assume we found a pixel at position 1
+        int hit = 1;
+        // but at a confidence below what we accept (so 2 or 3 will override)
+        double conf = 0.10;
+
+        for (Recognition recognition : currentRecognitions) {
+            // recognition information
+            double x0 = recognition.getLeft();
+            double x1 = recognition.getRight();
+            double y0 = recognition.getTop();
+            double y1 = recognition.getBottom();
+            double c = recognition.getConfidence();
+            // position of the recognition
+            double x = (x0 + x1) / 2;
+            double y = (y0 + y1) / 2;
+            // the width of the recognition
+            double w = x1 - x0;
+            // the height of the recognition
+            double h = y1 - y0;
+
+            // only consider small pixels. We expect about 150 x 56
+            if (w < 180.0 && h < 80.0) {
+                // pixel is an acceptable size
+
+                // crude selection based on x
+                if (x0 < 260.0) {
+                    // position 2
+                    if (c > conf) {
+                        // update the hit
+                        hit = 2;
+                        conf = c;
+                    }
+                } else {
+                    // position 3
+                    if (c > conf) {
+                        // update the hit
+                        hit = 3;
+                        conf = c;
+                    }
+                }
+            }
+        }
+
+        return hit;
+    }
 
 }
