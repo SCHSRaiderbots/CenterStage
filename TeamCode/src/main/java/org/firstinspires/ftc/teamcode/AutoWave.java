@@ -63,7 +63,7 @@ public class AutoWave extends OpMode {
 
         // make the command
         command = new SequentialCommandGroup(
-                new Delay(5.0),
+                new Delay(0.5),
                 // drive forward
                 new DriveForward( tileX(2, 6.0)),
                 new DriveTurnToward(tileXR(2.5), tileYR(-0.5)),
