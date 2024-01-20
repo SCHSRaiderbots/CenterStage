@@ -527,7 +527,7 @@ public class Motion {
         mWheelDiameterRight = 0.090;
 
         // set the wheel half separation
-        distWheel = (10.125 * 0.0254) / 2.0;
+        distWheel = (10.125 * 0.0254) / 2.0 * (3718.0 / 3600.0);
 
         // ticks per wheel revolution
         // The motor has a 45-tooth gear, and the wheel has a 90-tooth sprocket.
@@ -557,8 +557,11 @@ public class Motion {
                 setRobotDims2021();
                 break;
             case ROBOT_2022:
-            default:
                 setRobotDims2022();
+                break;
+            case ROBOT_2023:
+            default:
+                setRobotDims2023();
                 break;
         }
     }

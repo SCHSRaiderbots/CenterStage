@@ -8,6 +8,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -124,7 +125,7 @@ public class TeleopDrive extends OpMode {
         // process wrist buttons
         buttonsWrist();
 
-        // process gripper buttons
+        // process gripper buttons during initialization
         buttonsGripper();
     }
 
@@ -214,19 +215,11 @@ public class TeleopDrive extends OpMode {
         // process wrist buttons
         // buttonsWrist();
 
-        // hack to find gripper position
-        // pow = gamepad2.left_trigger;
-        // gripper.setPosition(pow);
-
         // process gripper buttons
-        if (armPosition > -90.0) {
-            gripper.grip();
-        } else {
-            buttonsGripper();
-        }
+        buttonsGripper();
 
         telemetry.addData("Arm angle", arm.getAngle());
-        telemetry.addData("wrist angle", wrist.getPosition());
+        telemetry.addData("Gripper2", gripper.getPosition2());
     }
 
     /**
@@ -263,11 +256,11 @@ public class TeleopDrive extends OpMode {
      * Method to provide consistent gripper controls.
      */
     public void buttonsGripper() {
-        if (gamepad1.left_bumper) gripper.grip();
-        if (gamepad1.right_bumper) gripper.release();
+        // hack to find gripper position
+        // gripper.setPosition2(gamepad2.left_trigger);
 
-        if (gamepad2.left_bumper) gripper.grip();
-        if (gamepad2.right_bumper) gripper.release();
+        if (gamepad1.left_bumper || gamepad2.left_bumper) gripper.release(); else gripper.grip();
+        if (gamepad1.right_bumper || gamepad2.right_bumper) gripper.release2(); else gripper.grip2();
     }
 
 
